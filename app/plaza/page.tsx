@@ -176,21 +176,28 @@ export default function PlazaPage() {
           const positivityRatio =
             totalReactions > 0 ? positiveReactions / totalReactions : 0.5;
 
-          // ⭐ C4 Stage Logic (with Debug Override)
-          let stage;
+          // ⭐ C6 Step 4 — Dynamic Stage Bias
+          let baseStage =
+            score < 6
+              ? 1
+              : score < 16
+              ? 2
+              : score < 31
+              ? 3
+              : score < 51
+              ? 4
+              : 5;
+
+          const stageBoost = positivityRatio > 0.7 ? 1 : 0;
+          const stageDampen = positivityRatio < 0.3 ? -1 : 0;
+
+          let stage = Math.max(
+            1,
+            Math.min(5, baseStage + stageBoost + stageDampen)
+          );
+
           if (debugAscension) {
-            stage = (post.id % 5) + 1; // cycle stages 1–5
-          } else {
-            stage =
-              score < 6
-                ? 1
-                : score < 16
-                ? 2
-                : score < 31
-                ? 3
-                : score < 51
-                ? 4
-                : 5;
+            stage = (post.id % 5) + 1;
           }
 
           return (
@@ -200,7 +207,6 @@ export default function PlazaPage() {
               style={
                 {
                   "--aura-color": auraColor(post.mask),
-                  // ⭐ Step 2: dynamic aura
                   ...auraStyle(score, post.mask, positivityRatio),
                 } as unknown as React.CSSProperties
               }
