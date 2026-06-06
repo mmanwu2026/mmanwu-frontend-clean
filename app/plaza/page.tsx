@@ -81,35 +81,37 @@ export default function PlazaPage() {
     }
   }
 
-  // ⭐ Aura class generator (score + mask)
-  function auraClass(score: number = 0, mask: number) {
+  // ⭐ Aura style generator (score + mask)
+  function auraStyle(score: number = 0, mask: number) {
     const color = auraColor(mask);
 
-    if (score < 6)
-      return `border-[${color}]`;
+    if (score < 6) {
+      return {
+        borderColor: color,
+      };
+    }
 
-    if (score < 16)
-      return `
-        border-[${color}]
-        shadow-md
-        shadow-[${color}33]
-        animate-[aura-breathe_3s_ease-in-out_infinite]
-      `;
+    if (score < 16) {
+      return {
+        borderColor: color,
+        boxShadow: `0 0 10px ${color}33`,
+        animation: "aura-breathe 3s ease-in-out infinite",
+      };
+    }
 
-    if (score < 31)
-      return `
-        border-[${color}]
-        shadow-lg
-        shadow-[${color}55]
-        animate-[aura-breathe_2s_ease-in-out_infinite]
-      `;
+    if (score < 31) {
+      return {
+        borderColor: color,
+        boxShadow: `0 0 15px ${color}55`,
+        animation: "aura-breathe 2s ease-in-out infinite",
+      };
+    }
 
-    return `
-      border-[${color}]
-      shadow-xl
-      shadow-[${color}77]
-      animate-[aura-pulse_1.5s_ease-in-out_infinite]
-    `;
+    return {
+      borderColor: color,
+      boxShadow: `0 0 20px ${color}77`,
+      animation: "aura-pulse 1.5s ease-in-out infinite",
+    };
   }
 
   return (
@@ -127,10 +129,8 @@ export default function PlazaPage() {
         {posts.map((post) => (
           <div
             key={post.id}
-            className={`
-              p-5 rounded-lg bg-white transition-all duration-300 relative
-              border ${auraClass(post.spiritScore ?? 0, post.mask)}
-            `}
+            className="p-5 rounded-lg bg-white transition-all duration-300 relative border"
+            style={auraStyle(post.spiritScore ?? 0, post.mask)}
           >
             {/* Floating spirit particles for high-spirit posts */}
             {post.spiritScore !== undefined && post.spiritScore >= 16 && (
@@ -171,7 +171,6 @@ export default function PlazaPage() {
             >
               Spirit Score: {post.spiritScore ?? 0}
             </div>
-// end rebuild
 
             <p className="whitespace-pre-line text-lg">{post.content}</p>
 
