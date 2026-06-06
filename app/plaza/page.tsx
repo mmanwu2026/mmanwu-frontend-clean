@@ -1,7 +1,7 @@
 // force plaza rebuild
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReactionBar from "@/components/ReactionBar";
 
 // Define a Post type so TypeScript is happy during Vercel builds
@@ -28,6 +28,10 @@ export default function PlazaPage() {
 
   // ⭐ C4 Debug Mode toggle
   const [debugAscension, setDebugAscension] = useState(false);
+
+  // ⭐ Surge memory (per post)
+  const prevPositivityMap = useRef<Record<number, number>>({});
+  const prevPositiveReactionsMap = useRef<Record<number, number>>({});
 
   // ⭐ Press "D" to toggle debug mode
   useEffect(() => {
@@ -200,14 +204,19 @@ export default function PlazaPage() {
             stage = (post.id % 5) + 1;
           }
 
-          // ⭐ C7 — Detect positivity spike
-          const [prevPositivity, setPrevPositivity] = useState(positivityRatio);
+          // ⚡ C7 — Hybrid Surge Detection
+          const prevPos = prevPositivityMap.current[post.id] ?? positivityRatio;
+          const prevPosReacts =
+            prevPositiveReactionsMap.current[post.id] ?? positiveReactions;
 
-          const positivitySpike = positivityRatio - prevPositivity > 0.25;
+          const positivitySpike = positivityRatio - prevPos > 0.25;
+          const newPositiveReaction = positiveReactions > prevPosReacts;
 
-          useEffect(() => {
-            setPrevPositivity(positivityRatio);
-          }, [positivityRatio]);
+          const surge = positivitySpike || newPositiveReaction;
+
+          // Update memory AFTER computing surge
+          prevPositivityMap.current[post.id] = positivityRatio;
+          prevPositiveReactionsMap.current[post.id] = positiveReactions;
 
           return (
             <div
@@ -221,12 +230,12 @@ export default function PlazaPage() {
               }
             >
               {/* ⚡ C7 Surge Flash */}
-              {positivitySpike && (
+              {surge && (
                 <div className="surge-flash absolute inset-0 rounded-lg"></div>
               )}
 
               {/* ⚡ C7 Surge Ripple */}
-              {positivitySpike && <div className="surge-ripple"></div>}
+              {surge && <div className="surge-ripple"></div>}
 
               {/* ⭐ Debug Badge */}
               {debugAscension && (
