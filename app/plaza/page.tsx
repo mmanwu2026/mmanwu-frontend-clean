@@ -170,7 +170,7 @@ export default function PlazaPage() {
             <div
               key={post.id}
               className="
-                p-5
+                p-7
                 rounded-lg
                 bg-white
                 transition-all
@@ -179,7 +179,7 @@ export default function PlazaPage() {
                 border
                 overflow-visible
                 isolate-layout
-                min-h-[140px]
+                min-h-[180px]
                 shadow-[0_0_1px_rgba(0,0,0,0.01)]
               "
               style={
