@@ -169,12 +169,22 @@ export default function PlazaPage() {
           return (
             <div
               key={post.id}
-              className="p-7 rounded-lg bg-white transition-all duration-300 relative border overflow-visible min-h-[180px] isolate-layout"
+              className="
+                p-5
+                rounded-lg
+                bg-white
+                transition-all
+                duration-300
+                relative
+                border
+                overflow-visible
+                isolate-layout
+              "
               style={
                 {
                   "--aura-color": auraColor(post.mask),
                   ...auraStyle(score, post.mask, positivityRatio),
-                } as unknown as React.CSSProperties
+                } as React.CSSProperties
               }
             >
               {surge && <div className="surge-flash absolute inset-0 rounded-lg"></div>}
