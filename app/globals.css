@@ -115,28 +115,42 @@ body {
 }
 
 /* ============================
-   🔺 C4 — Ascension Stages
+   🔺 C4 — Ascension Stages (Dual Rotating Rings)
    ============================ */
 
-/* Perfect circular rotating ascension ring */
+/* Outer rotating ascension ring */
 .ascension-ring {
   position: absolute;
-  inset: -12px;
-  border-radius: 9999px; /* FULL CIRCLE */
+  inset: -14px;
+  border-radius: 9999px; /* perfect circle */
   border: 2px solid var(--aura-color);
-  opacity: 0.35;
+  opacity: 0.25;
   pointer-events: none;
   z-index: -1;
   animation: ascension-ring-rotate 8s linear infinite;
 }
 
+/* Inner counter-rotating ring */
+.ascension-ring::after {
+  content: "";
+  position: absolute;
+  inset: 6px; /* slightly smaller inner ring */
+  border-radius: 9999px;
+  border: 1px solid var(--aura-color);
+  opacity: 0.18;
+  animation: ascension-ring-rotate-reverse 12s linear infinite;
+}
+
+/* Clockwise rotation */
 @keyframes ascension-ring-rotate {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-  100% {
-    transform: rotate(360deg) scale(1.05);
-  }
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(360deg) scale(1.05); }
+}
+
+/* Counter-clockwise rotation */
+@keyframes ascension-ring-rotate-reverse {
+  0% { transform: rotate(360deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1.05); }
 }
 
 /* Crowned halo arc above very high-spirit posts */
@@ -156,13 +170,7 @@ body {
 }
 
 @keyframes ascension-halo-glow {
-  0% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.9;
-  }
-  100% {
-    opacity: 0.4;
-  }
+  0% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
 }
