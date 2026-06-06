@@ -200,10 +200,19 @@ export default function PlazaPage() {
             stage = (post.id % 5) + 1;
           }
 
+          // ⭐ C7 — Detect positivity spike
+          const [prevPositivity, setPrevPositivity] = useState(positivityRatio);
+
+          const positivitySpike = positivityRatio - prevPositivity > 0.25;
+
+          useEffect(() => {
+            setPrevPositivity(positivityRatio);
+          }, [positivityRatio]);
+
           return (
             <div
               key={post.id}
-              className="p-5 rounded-lg bg-white transition-all duration-300 relative border"
+              className="p-5 rounded-lg bg-white transition-all duration-300 relative border overflow-hidden"
               style={
                 {
                   "--aura-color": auraColor(post.mask),
@@ -211,6 +220,14 @@ export default function PlazaPage() {
                 } as unknown as React.CSSProperties
               }
             >
+              {/* ⚡ C7 Surge Flash */}
+              {positivitySpike && (
+                <div className="surge-flash absolute inset-0 rounded-lg"></div>
+              )}
+
+              {/* ⚡ C7 Surge Ripple */}
+              {positivitySpike && <div className="surge-ripple"></div>}
+
               {/* ⭐ Debug Badge */}
               {debugAscension && (
                 <div className="absolute top-1 right-2 text-xs text-red-500 font-bold">
