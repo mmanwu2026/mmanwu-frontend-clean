@@ -156,7 +156,7 @@ export default function PlazaPage() {
         <p className="text-gray-500">No posts yet…</p>
       )}
 
-      <div className="space-y-6 w-full">
+      <div className="space-y-6">
         {posts.map((post) => {
           // ⭐ C6 Dynamics — Step 1 (core metrics)
           const score = post.spiritScore ?? 0;
@@ -221,7 +221,7 @@ export default function PlazaPage() {
           return (
             <div
               key={post.id}
-              className="p-7 rounded-lg bg-white transition-all duration-300 relative border overflow-visible min-h-[180px] w-full"
+              className="p-7 rounded-lg bg-white transition-all duration-300 relative border overflow-visible min-h-[180px]"
               style={
                 {
                   "--aura-color": auraColor(post.mask),
