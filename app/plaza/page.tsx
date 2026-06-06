@@ -184,7 +184,7 @@ export default function PlazaPage() {
                 {
                   "--aura-color": auraColor(post.mask),
                   ...auraStyle(score, post.mask, positivityRatio),
-                } as React.CSSProperties
+                } as unknown as React.CSSProperties
               }
             >
               {surge && <div className="surge-flash absolute inset-0 rounded-lg"></div>}
