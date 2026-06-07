@@ -1,4 +1,4 @@
-// plaza-bundle-refresh-002
+// plaza-bundle-refresh-003
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -117,7 +117,7 @@ export default function PlazaPage() {
   }
 
   return (
-    <div className="p-10 w-full max-w-3xl mx-auto">
+    <div className="p-10 w-full max-w-2xl mx-auto">
       <h1 className="text-4xl font-bold mb-8">Mmanwu Plaza</h1>
 
       {loading && <p>Loading posts…</p>}
@@ -203,66 +203,25 @@ export default function PlazaPage() {
 
               {stage >= 4 && positivityRatio > 0.4 && (
                 <>
-                  <div
-                    className="spirit-spark"
-                    style={{ top: "20%", left: "40%", background: auraColor(post.mask) }}
-                  />
+                  <div className="spirit-spark" style={{ top: "20%", left: "40%", background: auraColor(post.mask) }} />
                   {positivityRatio > 0.6 && (
-                    <div
-                      className="spirit-spark"
-                      style={{
-                        top: "60%",
-                        left: "55%",
-                        animationDelay: "0.2s",
-                        background: auraColor(post.mask),
-                      }}
-                    />
+                    <div className="spirit-spark" style={{ top: "60%", left: "55%", animationDelay: "0.2s", background: auraColor(post.mask) }} />
                   )}
                   {positivityRatio > 0.8 && (
-                    <div
-                      className="spirit-spark"
-                      style={{
-                        top: "35%",
-                        left: "70%",
-                        animationDelay: "0.4s",
-                        background: auraColor(post.mask),
-                      }}
-                    />
+                    <div className="spirit-spark" style={{ top: "35%", left: "70%", animationDelay: "0.4s", background: auraColor(post.mask) }} />
                   )}
                 </>
               )}
 
               {score >= 16 && (
                 <>
-                  <div
-                    className="spirit-particle"
-                    style={{ top: "10%", left: "5%", background: auraColor(post.mask) }}
-                  />
-                  <div
-                    className="spirit-particle"
-                    style={{
-                      top: "50%",
-                      left: "90%",
-                      animationDelay: "1s",
-                      background: auraColor(post.mask),
-                    }}
-                  />
-                  <div
-                    className="spirit-particle"
-                    style={{
-                      top: "80%",
-                      left: "20%",
-                      animationDelay: "2s",
-                      background: auraColor(post.mask),
-                    }}
-                  />
+                  <div className="spirit-particle" style={{ top: "10%", left: "5%", background: auraColor(post.mask) }} />
+                  <div className="spirit-particle" style={{ top: "50%", left: "90%", animationDelay: "1s", background: auraColor(post.mask) }} />
+                  <div className="spirit-particle" style={{ top: "80%", left: "20%", animationDelay: "2s", background: auraColor(post.mask) }} />
                 </>
               )}
 
-              <div
-                className="text-xs font-semibold mb-1"
-                style={{ color: auraColor(post.mask) }}
-              >
+              <div className="text-xs font-semibold mb-1" style={{ color: auraColor(post.mask) }}>
                 Spirit Score: {score}
               </div>
 
