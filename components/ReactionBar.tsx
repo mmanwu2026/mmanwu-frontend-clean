@@ -6,6 +6,7 @@ interface ReactionBarProps {
   postId: string;
   creatorId: string;
   currentUserId: string;
+  onReact?: () => void; // ⭐ NEW: callback to refresh PlazaPage
 }
 
 type ReactionCounts = {
@@ -24,6 +25,7 @@ export default function ReactionBar({
   postId,
   creatorId,
   currentUserId,
+  onReact,
 }: ReactionBarProps) {
   const [selectedMask, setSelectedMask] = useState<number | null>(null);
   const [reactionCounts, setReactionCounts] = useState<ReactionCounts>({
@@ -58,11 +60,16 @@ export default function ReactionBar({
         return;
       }
 
+      // ⭐ Update local UI
       setSelectedMask(maskId);
 
       if (data.reactions) {
         setReactionCounts(data.reactions as ReactionCounts);
       }
+
+      // ⭐ Tell PlazaPage to refresh the post
+      if (onReact) onReact();
+
     } catch (err) {
       console.error("Network error:", err);
     }
