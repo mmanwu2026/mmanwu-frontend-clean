@@ -127,5 +127,10 @@ export default async function ProfilePage({
   );
 }
 
+// ⭐ FINAL NUCLEAR INVALIDATION — forces Vercel to rebuild server bundle
+export function vercelInvalidate() {
+  return "invalidate-009";
+}
+
 // ⭐ Guaranteed Vercel rebuild trigger
 export const forceRebuild = true;
