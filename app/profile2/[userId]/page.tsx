@@ -41,16 +41,16 @@ export default async function ProfilePage({
   // ⭐ Forces Vercel to rebuild server bundle
   const vercelSync = "010-FINAL";
 
-  // ⭐ Absolute base URL for server components
+  // ⭐ Correct backend base URL (Railway)
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://mmanwu-frontend-2026-vrub.vercel.app";
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    "https://mmanwu-clean-production-6465.up.railway.app";
 
   let data;
 
   try {
-    // ⭐ Absolute URL fetch (fixes Vercel server component errors)
-    const res = await fetch(`${baseUrl}/api/profile/${userId}`, {
+    // ⭐ Correct backend fetch
+    const res = await fetch(`${baseUrl}/profile/${userId}`, {
       cache: "no-store",
     });
 
