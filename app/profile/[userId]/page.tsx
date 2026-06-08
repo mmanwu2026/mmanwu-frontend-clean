@@ -1,4 +1,4 @@
-// force vercel rebuild 010
+// force vercel rebuild 010-FINAL
 // app/profile/[userId]/page.tsx
 
 import React from "react";
@@ -39,7 +39,7 @@ export default async function ProfilePage({
   const { userId } = params;
 
   // ⭐ Forces Vercel to rebuild server bundle
-  const vercelSync = "010";
+  const vercelSync = "010-FINAL";
 
   // ⭐ Guaranteed unique value every build
   const vercelHardReset = Math.random();
@@ -129,11 +129,11 @@ export default async function ProfilePage({
 
 // ⭐ Safe rebuild trigger
 export function vercelInvalidate() {
-  return "invalidate-010";
+  return "invalidate-010-FINAL";
 }
 
 // ⭐ Guaranteed Vercel rebuild trigger
 export const forceRebuild = true;
 
 // ⭐ Deep invalidation for dynamic route bundle
-export const vercelHardInvalidate = "010";
+export const vercelHardInvalidate = "010-FINAL";
