@@ -53,7 +53,7 @@ export default function PlazaPage() {
 
       const patched = data.map((p: any) => ({
         ...p,
-        maskTier: p.mask, // ⭐ FIXED: backend returns mask, not maskTier
+        maskTier: p.mask,
         spiritScore: p.spiritScore ?? 0,
         positivityRatio: p.positivityRatio ?? 0.5,
         reactions: p.reactions ?? {
@@ -66,10 +66,10 @@ export default function PlazaPage() {
       }));
 
       const sorted = patched.sort(
-  (a: PlazaPost, b: PlazaPost) =>
-    new Date(b.createdAt).getTime() -
-    new Date(a.createdAt).getTime()
-);
+        (a: PlazaPost, b: PlazaPost) =>
+          new Date(b.createdAt).getTime() -
+          new Date(a.createdAt).getTime()
+      );
 
       setPosts(sorted);
     } catch (err) {
@@ -234,10 +234,12 @@ export default function PlazaPage() {
                 ${surgeClass}
                 ${emotionClass}
               `}
-              style={{
-                "--aura-color": auraColor(post.maskTier),
-                ...auraStyle(score, post.maskTier, positivityRatio),
-              } as React.CSSProperties}
+              style={
+                {
+                  "--aura-color": auraColor(post.maskTier),
+                  ...auraStyle(score, post.maskTier, positivityRatio),
+                } as unknown as React.CSSProperties
+              }
             >
               <div
                 className="absolute left-0 top-0 h-full w-[6px] rounded-l-2xl"
