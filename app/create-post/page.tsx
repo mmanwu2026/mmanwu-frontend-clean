@@ -1,6 +1,7 @@
 // rebuild-frontend-007 — guaranteed redirect to Plaza
 "use client";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -32,6 +33,7 @@ export default function CreatePostPage() {
         body: JSON.stringify({ content, mask }),
       });
 
+      // If backend fails, this will throw before redirect
       const data = await res.json();
 
       // ⭐ Redirect IMMEDIATELY after success — no state updates before redirect
