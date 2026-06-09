@@ -66,10 +66,10 @@ export default function PlazaPage() {
       }));
 
       const sorted = patched.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() -
-          new Date(a.createdAt).getTime()
-      );
+  (a: PlazaPost, b: PlazaPost) =>
+    new Date(b.createdAt).getTime() -
+    new Date(a.createdAt).getTime()
+);
 
       setPosts(sorted);
     } catch (err) {
