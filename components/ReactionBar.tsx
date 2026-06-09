@@ -4,7 +4,8 @@ import React, { useState } from "react";
 
 interface ReactionBarProps {
   postId: string;
-  userId: string;
+  userId: string;        // viewer
+  creatorId: string;     // post owner
   reactions: {
     mask1: number;
     mask2: number;
@@ -22,6 +23,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 export default function ReactionBar({
   postId,
   userId,
+  creatorId,
   reactions,
   spiritScore = 0,
   positivityRatio = 0.5,
@@ -50,18 +52,20 @@ export default function ReactionBar({
     setLoading(false);
   };
 
+  // ⭐ New emoji set
   const maskData = [
-    { tier: 1, emoji: "🜂", count: reactions.mask1 },
-    { tier: 2, emoji: "🔥", count: reactions.mask2 },
-    { tier: 3, emoji: "🜁", count: reactions.mask3 },
-    { tier: 4, emoji: "✨", count: reactions.mask4 },
-    { tier: 5, emoji: "🌿", count: reactions.mask5 },
+    { tier: 1, emoji: "😶‍🌫️", count: reactions.mask1 },
+    { tier: 2, emoji: "😤", count: reactions.mask2 },
+    { tier: 3, emoji: "😊", count: reactions.mask3 },
+    { tier: 4, emoji: "🤩", count: reactions.mask4 },
+    { tier: 5, emoji: "😇", count: reactions.mask5 },
   ];
 
   return (
     <div className="flex items-center gap-4 mt-4">
       {maskData.map((mask) => {
-        const isDisabled = mask.tier <= 2 && userId !== "creator";
+        // ⭐ Only creator can use masks 1 & 2
+        const isDisabled = mask.tier <= 2 && userId !== creatorId;
 
         return (
           <button
