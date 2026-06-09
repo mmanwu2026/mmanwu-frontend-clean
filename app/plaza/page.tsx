@@ -5,6 +5,9 @@ export const dynamic = "force-dynamic";
 import React, { useEffect, useState, useRef } from "react";
 import ReactionBar from "@/components/ReactionBar";
 
+// ⭐ Use the SAME backend URL as Create Post
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+
 interface PlazaPost {
   id: string;
   userId: string;
@@ -43,10 +46,11 @@ export default function PlazaPage() {
 
   async function fetchPosts() {
     try {
-      const res = await fetch(
-        "https://mmanwu-backend-2026-production.up.railway.app/plaza",
-        { cache: "no-store" }
-      );
+      // ⭐ FIXED: Use environment variable backend URL
+      const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza`, {
+        cache: "no-store",
+      });
+
       if (!res.ok) throw new Error("Failed to fetch posts");
 
       const data = await res.json();
