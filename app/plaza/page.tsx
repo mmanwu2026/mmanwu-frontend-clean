@@ -9,14 +9,14 @@ import ReactionBar from "@/components/ReactionBar";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 interface PlazaPost {
-  id: string;
+  id: number;
   userId: string;
   content: string;
   createdAt: string;
   maskTier: number;
-  spiritScore?: number;
-  positivityRatio?: number;
-  reactions?: {
+  spiritScore: number;
+  positivityRatio: number;
+  reactions: {
     mask1: number;
     mask2: number;
     mask3: number;
@@ -46,7 +46,6 @@ export default function PlazaPage() {
 
   async function fetchPosts() {
     try {
-      // ⭐ FIXED: Use environment variable backend URL
       const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza`, {
         cache: "no-store",
       });
@@ -55,19 +54,40 @@ export default function PlazaPage() {
 
       const data = await res.json();
 
-      const patched = data.map((p: any) => ({
-        ...p,
-        maskTier: p.mask,
-        spiritScore: p.spiritScore ?? 0,
-        positivityRatio: p.positivityRatio ?? 0.5,
-        reactions: p.reactions ?? {
-          mask1: 0,
-          mask2: 0,
-          mask3: 0,
-          mask4: 0,
-          mask5: 0,
-        },
-      }));
+      const patched: PlazaPost[] = data.map((p: any) => {
+        const r = p.reactions || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+        const total =
+          (r[1] || 0) +
+          (r[2] || 0) +
+          (r[3] || 0) +
+          (r[4] || 0) +
+          (r[5] || 0);
+
+        const positive =
+          (r[3] || 0) +
+          (r[4] || 0) +
+          (r[5] || 0);
+
+        const positivityRatio = total > 0 ? positive / total : 0.5;
+
+        return {
+          id: p.id,
+          userId: p.creatorId ?? "unknown-creator",
+          content: p.content,
+          createdAt: p.createdAt,
+          maskTier: p.mask,
+          spiritScore: p.spiritScore ?? 0,
+          positivityRatio,
+          reactions: {
+            mask1: r[1] || 0,
+            mask2: r[2] || 0,
+            mask3: r[3] || 0,
+            mask4: r[4] || 0,
+            mask5: r[5] || 0,
+          },
+        };
+      });
 
       const sorted = patched.sort(
         (a: PlazaPost, b: PlazaPost) =>
@@ -169,20 +189,21 @@ export default function PlazaPage() {
           let stage = Math.max(1, Math.min(5, baseStage + stageBoost + stageDampen));
 
           if (debugAscension) {
-            const numericId = parseInt(post.id, 10);
-            stage = isNaN(numericId) ? stage : (numericId % 5) + 1;
+            stage = (post.id % 5) + 1;
           }
 
-          const prevPos = prevPositivityMap.current[post.id] ?? positivityRatio;
-          const prevPosReacts = prevPositiveReactionsMap.current[post.id] ?? positive;
+          const key = String(post.id);
+
+          const prevPos = prevPositivityMap.current[key] ?? positivityRatio;
+          const prevPosReacts = prevPositiveReactionsMap.current[key] ?? positive;
 
           const positivitySpike = positivityRatio - prevPos > 0.25;
           const newPositiveReaction = positive > prevPosReacts;
 
           const surge = positivitySpike || newPositiveReaction;
 
-          prevPositivityMap.current[post.id] = positivityRatio;
-          prevPositiveReactionsMap.current[post.id] = positive;
+          prevPositivityMap.current[key] = positivityRatio;
+          prevPositiveReactionsMap.current[key] = positive;
 
           const auraClass = "mask-aura";
 
@@ -365,7 +386,7 @@ export default function PlazaPage() {
               </div>
 
               <ReactionBar
-                postId={post.id}
+                postId={String(post.id)}
                 userId={post.userId ?? "demo-user-123"}
                 reactions={{
                   mask1: post.reactions?.mask1 ?? 0,
