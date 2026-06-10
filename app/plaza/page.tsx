@@ -304,7 +304,7 @@ export default function PlazaPage() {
                   relative
                   p-8
                   rounded-2xl
-                  bg-black/20 backdrop-blur-md
+                  bg-white/10 backdrop-blur-md
                   transition-all
                   duration-500
                   border
