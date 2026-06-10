@@ -199,7 +199,7 @@ export default function PlazaPage() {
       `}</style>
 
      {/* ⭐ FIXED: Dark Plaza background */}
-      <div className="bg-[#0a0a0a] min-h-screen max-w-xl mx-auto mt-10 px-4">
+      <div className="max-w-xl mx-auto mt-10 px-4">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">
           Mmanwu Plaza
         </h1>
@@ -311,7 +311,6 @@ export default function PlazaPage() {
                   overflow-visible
                   isolate-layout
                   min-h-[420px]
-                  mb-10
                   shadow-[0_10px_30px_rgba(0,0,0,0.05)]
                   max-w-[300px]
                   mx-auto
