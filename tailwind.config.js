@@ -1,7 +1,5 @@
-// tailwind.config.js — Tailwind v4 format
-import { defineConfig } from "tailwindcss";
-
-export default defineConfig({
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -9,7 +7,7 @@ export default defineConfig({
 
   theme: {
     extend: {
-      // === PLAZA CACHEBUST KEYS (Guaranteed to change Tailwind hash) ===
+      // === PLAZA CACHEBUST KEYS ===
       spacing: {
         "__plaza_cachebust_spacing_004": "11px",
       },
@@ -23,8 +21,19 @@ export default defineConfig({
         "__plaza_cachebust_font_004": "13px",
       },
 
-      // Keep your previous dummy key (harmless)
       dummy: {},
     },
   },
-});
+
+  variants: {
+    extend: {
+      opacity: ["disabled"],
+      cursor: ["disabled"],
+      backgroundColor: ["disabled"],
+    },
+  },
+
+  plugins: [
+    require("@tailwindcss/forms"),
+  ],
+};
