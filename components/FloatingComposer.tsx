@@ -2,15 +2,16 @@
 
 import React, { useState, useRef, useEffect } from "react";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+
 export default function FloatingComposer({ onPost }: { onPost: () => void }) {
   const [content, setContent] = useState("");
-  const [mask, setMask] = useState<number | null>(null);
+  ￼const [mask, setMask] = useState<number | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   const lastScroll = useRef(0);
 
-  // Scroll hide/show logic
   useEffect(() => {
     function handleScroll() {
       const current = window.scrollY;
@@ -30,7 +31,7 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
 
     const creatorId = "demo-user-001";
 
-    await fetch(`/api/plaza`, {
+    await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content, mask, creatorId }),
