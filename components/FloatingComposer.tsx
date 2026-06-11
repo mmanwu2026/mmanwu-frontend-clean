@@ -11,7 +11,6 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const [hidden, setHidden] = useState(false);
 
-  // ⭐ NEW — Gatekeeper state
   const [gatekeeperOptions, setGatekeeperOptions] = useState<any[]>([]);
   const [showGatekeeperModal, setShowGatekeeperModal] = useState(false);
 
@@ -20,11 +19,8 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
   useEffect(() => {
     function handleScroll() {
       const current = window.scrollY;
-      if (current > lastScroll.current + 10) {
-        setHidden(true);
-      } else if (current < lastScroll.current - 10) {
-        setHidden(false);
-      }
+      if (current > lastScroll.current + 10) setHidden(true);
+      else if (current < lastScroll.current - 10) setHidden(false);
       lastScroll.current = current;
     }
     window.addEventListener("scroll", handleScroll);
@@ -40,36 +36,52 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
     const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }), // raw text only
+      body: JSON.stringify({
+        content,
+        mask,
+        creatorId: "viewer-demo-001",
+      }),
     });
 
     const data = await res.json();
 
-    // ⭐ Gatekeeper intercepted the post
+    // ❌ Backend error
+    if (!res.ok) {
+      alert(data.error || "Error creating post");
+      return;
+    }
+
+    // ⭐ Gatekeeper intercepted
     if (data.options) {
       setGatekeeperOptions(data.options);
       setShowGatekeeperModal(true);
       return;
     }
+
+    // ⭐ No Gatekeeper → publish immediately
+    await publishFinalVersion(content);
   }
 
   /* ---------------------------------------------------------
      ⭐ STEP 2 — Publish chosen refined version
      --------------------------------------------------------- */
   async function publishFinalVersion(finalText: string) {
-    const creatorId = "demo-user-001";
-
     const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza/publish`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         content: finalText,
         mask,
-        creatorId,
+        creatorId: "viewer-demo-001",
       }),
     });
 
-    await res.json();
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Error publishing post");
+      return;
+    }
 
     // Reset UI
     setContent("");
