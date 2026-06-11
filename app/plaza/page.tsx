@@ -12,7 +12,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 // -----------------------------
 interface PlazaPost {
   id: number;
-  userId: string;
+  creatorId: string;   // 🔧 was userId
   content: string;
   createdAt: string;
   maskTier: number;
@@ -80,7 +80,7 @@ export default function PlazaPage() {
 
         return {
           id: p.id,
-          userId: p.creatorId ?? "unknown-creator",
+          creatorId: p.creatorId ?? "unknown-creator", // 🔧 was userId
           content: p.content,
           createdAt: p.createdAt,
           maskTier: p.mask,
@@ -431,7 +431,7 @@ export default function PlazaPage() {
                   <ReactionBar
                     postId={String(post.id)}
                     userId={"viewer-demo-001"}
-                    creatorId={post.userId}
+                    creatorId={post.creatorId}  {/* 🔧 was post.userId */}
                     reactions={{
                       mask1: post.reactions?.mask1 ?? 0,
                       mask2: post.reactions?.mask2 ?? 0,
