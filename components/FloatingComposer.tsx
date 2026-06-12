@@ -1,3 +1,5 @@
+// FloatingComposer.tsx (fixed)
+
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
@@ -28,7 +30,7 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
   }, []);
 
   /* ---------------------------------------------------------
-     ⭐ STEP 1 — Send raw text to Gatekeeper
+     STEP 1 — Send raw text to Gatekeeper
      --------------------------------------------------------- */
   async function submitPost() {
     if (!content.trim() || !mask) return;
@@ -39,31 +41,28 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
       body: JSON.stringify({
         content,
         mask,
-        creatorId: "viewer-demo-001",
+        creator_id: "viewer-demo-001",   // FIXED
       }),
     });
 
     const data = await res.json();
 
-    // ❌ Backend error
     if (!res.ok) {
       alert(data.error || "Error creating post");
       return;
     }
 
-    // ⭐ Gatekeeper intercepted
     if (data.options) {
       setGatekeeperOptions(data.options);
       setShowGatekeeperModal(true);
       return;
     }
 
-    // ⭐ No Gatekeeper → publish immediately
     await publishFinalVersion(content);
   }
 
   /* ---------------------------------------------------------
-     ⭐ STEP 2 — Publish chosen refined version
+     STEP 2 — Publish chosen refined version
      --------------------------------------------------------- */
   async function publishFinalVersion(finalText: string) {
     const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza/publish`, {
@@ -72,7 +71,7 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
       body: JSON.stringify({
         content: finalText,
         mask,
-        creatorId: "viewer-demo-001",
+        creator_id: "viewer-demo-001",   // FIXED
       }),
     });
 
@@ -83,13 +82,12 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
       return;
     }
 
-    // Reset UI
     setContent("");
     setMask(null);
     setExpanded(false);
     setShowGatekeeperModal(false);
 
-    onPost(); // refresh feed
+    onPost();
   }
 
   return (
@@ -171,7 +169,6 @@ export default function FloatingComposer({ onPost }: { onPost: () => void }) {
         )}
       </div>
 
-      {/* ⭐ REAL Gatekeeper Modal */}
       {showGatekeeperModal && (
         <GatekeeperModal
           options={gatekeeperOptions}
