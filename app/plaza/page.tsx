@@ -432,6 +432,14 @@ export default function PlazaPage() {
                     <span>{new Date(post.createdAt).toLocaleString()}</span>
                   </div>
 
+                  {/* ⭐ VIEW PROFILE LINK */}
+                  <Link
+                    href={`/creator/${post.creatorId}`}
+                    className="text-xs text-blue-600 hover:underline mt-3 mb-1 block"
+                  >
+                    View Profile →
+                  </Link>
+
                   <ReactionBar
                     postId={String(post.id)}
                     creatorId={post.creatorId}
