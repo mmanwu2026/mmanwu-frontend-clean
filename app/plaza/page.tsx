@@ -11,6 +11,16 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 // -----------------------------
 // Types
 // -----------------------------
+
+interface CreatorProfile {
+  id: string;
+  username: string | null;
+  avatar_url: string | null;
+  bio: string | null;
+  spirit_score: number;
+  mask_tier: number;
+}
+
 interface PlazaPost {
   id: number;
   creatorId: string;
@@ -35,6 +45,8 @@ interface PlazaPost {
 // -----------------------------
 export default function PlazaPage() {
   const { user, loading: userLoading } = useUser();   // ⭐ ADDED
+
+  const [creators, setCreators] = useState<Record<string, CreatorProfile>>({});
 
   const [posts, setPosts] = useState<PlazaPost[]>([]);
   const [loading, setLoading] = useState(true);
