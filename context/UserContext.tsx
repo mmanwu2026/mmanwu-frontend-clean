@@ -33,7 +33,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
       // If no user exists, create one
       if (!userId) {
-        const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/users/create`, {
+        const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -46,7 +46,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const data = await res.json();
         userId = data.user.id;
 
-        // ⭐ FIX: assert non-null
         localStorage.setItem("mmanwu_user_id", userId!);
       }
 
