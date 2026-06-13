@@ -5,6 +5,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 // ⭐ Cache‑bust CSS so Vercel + browser load the NEW styles
 import "./globals.css?v=10";
 
+import { UserProvider } from "@/context/UserContext";  // ⭐ ADDED
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,9 +34,11 @@ export default function RootLayout({
     >
       {/* plaza-css-bust-10 */}
       <body className="min-h-screen flex flex-col items-center bg-white">
-        <div className="w-full max-w-xl px-4">
-          {children}
-        </div>
+        <UserProvider>   {/* ⭐ WRAPPED APP IN USER PROVIDER */}
+          <div className="w-full max-w-xl px-4">
+            {children}
+          </div>
+        </UserProvider>
       </body>
     </html>
   );
