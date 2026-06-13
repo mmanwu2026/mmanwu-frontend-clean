@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { useUser } from "@/context/UserContext";   // ⭐ ADDED
 
 interface ReactionBarProps {
   postId: string;
-  userId: string;
   creatorId: string;
   reactions: {
     mask1: number;
@@ -22,26 +22,33 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 export default function ReactionBar({
   postId,
-  userId,
   creatorId,
   reactions,
   spiritScore = 0,
   positivityRatio = 0.5,
   onReact,
 }: ReactionBarProps) {
+  const { user, loading } = useUser();             // ⭐ ADDED
+
   const [selected, setSelected] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingReaction, setLoadingReaction] = useState(false);
 
   const handleReact = async (maskTier: number) => {
-    if (loading) return;
-    setLoading(true);
+    if (loadingReaction) return;
+    if (loading || !user) return;                  // ⭐ Prevent reacting before identity loads
+
+    setLoadingReaction(true);
     setSelected(maskTier);
 
     try {
       const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/react`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ postId, maskTier }),
+        body: JSON.stringify({
+          postId,
+          maskTier,
+          userId: user.id,                         // ⭐ REAL USER ID
+        }),
       });
 
       const data = await res.json();
@@ -53,7 +60,7 @@ export default function ReactionBar({
       console.error("Reaction error:", err);
     }
 
-    setLoading(false);
+    setLoadingReaction(false);
   };
 
   const maskData = [
@@ -70,6 +77,7 @@ export default function ReactionBar({
         <button
           key={mask.tier}
           onClick={() => handleReact(mask.tier)}
+          disabled={loading || !user}              // ⭐ Disable until user loads
           className="flex flex-col items-center cursor-pointer transition-all"
         >
           <div className="relative">
