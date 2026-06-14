@@ -473,7 +473,7 @@ export default function PlazaPage() {
                       }}
                       spiritScore={score}
                       positivityRatio={positivityRatio}
-                      onReact={(updatedPost) => {
+               onReact={(updatedPost) => {
   const r = updatedPost.reactions || {};
 
   const total =
@@ -525,8 +525,6 @@ export default function PlazaPage() {
   );
 }}
 />
-</div>
-
 </div>  {/* closes card */}
 );
 })}
@@ -539,3 +537,4 @@ export default function PlazaPage() {
 </div> {/* closes plaza-background */}
 );
 }
+
