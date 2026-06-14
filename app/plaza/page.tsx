@@ -503,7 +503,7 @@ export default function PlazaPage() {
                             : p
                         )
                       );
-                                        }}
+                   }}
                   />
                 </div>
                 {/* closes the Ritual Panel card */}
@@ -511,7 +511,7 @@ export default function PlazaPage() {
               );
               {/* closes the return inside posts.map */}
 
-          })} 
+          }) 
           {/* closes posts.map and JSX expression */}
 
         </div>
