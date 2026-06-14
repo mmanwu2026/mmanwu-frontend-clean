@@ -378,37 +378,36 @@ export default function PlazaPage() {
                       const newScore = updatedPost.spiritScore ?? score;
 
                       let newAutoMask = 2;
-                      if (newScore > 500) newAutoMask = 6;
-                      else if (newScore > 200) newAutoMask = 5;
-                      else if (newScore > 100) newAutoMask = 4;
-                      else if (newScore > 20) newAutoMask = 3;
+if (newScore > 500) newAutoMask = 6;
+else if (newScore > 200) newAutoMask = 5;
+else if (newScore > 100) newAutoMask = 4;
+else if (newScore > 20) newAutoMask = 3;
 
-                      setPosts((prev) =>
-                        prev.map((p) =>
-                          p.id === updatedPost.id
-                            ? {
-                                ...p,
-                                maskTier: updatedPost.mask ?? p.maskTier,
-                                autoMask: newAutoMask,
-                                spiritScore: newScore,
-                                positivityRatio: newPositivityRatio,
-                                reactions: {
-                                  mask1: r["1"] ?? 0,
-                                  mask2: r["2"] ?? 0,
-                                  mask3: r["3"] ?? 0,
-                                  mask4: r["4"] ?? 0,
-                                  mask5: r["5"] ?? 0,
-                                  mask6: r["6"] ?? 0,
-                                },
-                              }
-                            : p
-                        )
-                      );
+setPosts((prev) =>
+  prev.map((p) =>
+    p.id === updatedPost.id
+      ? {
+          ...p,
+          maskTier: updatedPost.mask ?? p.maskTier,
+          autoMask: newAutoMask,
+          spiritScore: newScore,
+          positivityRatio: newPositivityRatio,
+          reactions: {
+            mask1: r["1"] ?? 0,
+            mask2: r["2"] ?? 0,
+            mask3: r["3"] ?? 0,
+            mask4: r["4"] ?? 0,
+            mask5: r["5"] ?? 0,
+            mask6: r["6"] ?? 0,
+          },
+        }
+      : p
+  )
+);
                     }}
                   />
                 </div>
                 {/* closes the Ritual Panel card */}
-              </div>
             );
           })}
 
