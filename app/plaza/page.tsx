@@ -505,13 +505,15 @@ export default function PlazaPage() {
                       );
                     }}
                   />
-                </div> 
+                                </div> 
                 {/* closes the Ritual Panel card */}
-              </div> 
+
+              ); 
               {/* closes the return inside posts.map */}
-            );
-          })} 
-          {/* closes posts.map and JSX expression */}
+
+            })} 
+            {/* closes posts.map and JSX expression */}
+
         </div> 
         {/* closes the posts wrapper */}
 
