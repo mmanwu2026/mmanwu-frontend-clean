@@ -36,7 +36,7 @@ export default function RootLayout({
       {/* plaza-css-bust-10 */}
       <body className="min-h-screen flex flex-col items-center">
         <UserProvider>
-          <div className="w-full max-w-xl px-4">
+          <div className="w-full px-4">
 
             {/* ⭐ CLIENT HEADER */}
             <Header />
