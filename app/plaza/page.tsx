@@ -535,12 +535,14 @@ return (
                             : p
                         )
                       );
-                    }}
+                                       }}
                   />
-                </div>
+                </div> {/* end of card */}
 
-            );
-          })}
+              </div> {/* closes space-y-12 wrapper */}
+
+            );       {/* closes return inside map */}
+          })}        {/* closes posts.map */}
 
         </div> {/* closes posts wrapper */}
       </div> {/* closes center wrapper */}
