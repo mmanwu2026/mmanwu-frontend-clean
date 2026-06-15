@@ -21,9 +21,9 @@
 /* ------------------------------------------------------------ */
 
 @keyframes aura-breathe {
-  0% { box-shadow: none; }
-  50% { box-shadow: none; }
-  100% { box-shadow: none; }
+  0% { box-shadow: 0 0 8px var(--aura-color); }
+  50% { box-shadow: 0 0 16px var(--aura-color); }
+  100% { box-shadow: 0 0 8px var(--aura-color); }
 }
 
 @keyframes aura-pulse {
@@ -263,9 +263,7 @@
 
 .plaza-background {
   background: radial-gradient(circle at center, #0a0a0f 0%, #0d0b1a 40%, #000000 100%);
-  min-height: 100vh;
   padding: 2rem 1rem;
-  background-attachment: fixed;
 }
 
 /* ------------------------------------------------------------ */
