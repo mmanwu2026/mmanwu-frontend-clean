@@ -66,8 +66,8 @@ export default function FloatingComposer({ onPost }: { onPost: (post?: any) => v
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         content: finalText,
-        mask_tier: 0,
-        creator_id: user.id,
+        mask: 0,              // ⭐ your backend expects "mask", not mask_tier
+        creatorId: user.id,   // ⭐ your backend expects "creatorId", not creator_id
       }),
     });
 
@@ -78,16 +78,12 @@ export default function FloatingComposer({ onPost }: { onPost: (post?: any) => v
       return;
     }
 
+    // data IS the new post
     setContent("");
     setExpanded(false);
     setShowGatekeeperModal(false);
 
-    // ⭐ FIXED: Pass the new post back to Plaza if available
-    if (data.post) {
-      onPost(data.post);
-    } else {
-      onPost();
-    }
+    onPost(data);
   }
 
   return (
