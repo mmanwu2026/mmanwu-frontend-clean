@@ -230,34 +230,36 @@ export default function PlazaPage() {
     fetchPosts();
   }, []);
 
-  return (
-    <div className="plaza-background">
+ return (
+  <div className="plaza-background min-h-screen w-full">
 
-      {/* === D4 TEMPLE EMBERS === */}
-      <div className="temple-ember" style={{ left: "12%", top: "20%" }}></div>
-      <div className="temple-ember" style={{ left: "28%", top: "40%" }}></div>
-      <div className="temple-ember" style={{ left: "45%", top: "10%" }}></div>
-      <div className="temple-ember" style={{ left: "62%", top: "35%" }}></div>
-      <div className="temple-ember" style={{ left: "78%", top: "25%" }}></div>
-      <div className="temple-ember" style={{ left: "15%", top: "60%" }}></div>
-      <div className="temple-ember" style={{ left: "50%", top: "70%" }}></div>
-      <div className="temple-ember" style={{ left: "85%", top: "55%" }}></div>
+    {/* === D4 TEMPLE EMBERS === */}
+    <div className="temple-ember" style={{ left: "12%", top: "20%" }}></div>
+    <div className="temple-ember" style={{ left: "28%", top: "40%" }}></div>
+    <div className="temple-ember" style={{ left: "45%", top: "10%" }}></div>
+    <div className="temple-ember" style={{ left: "62%", top: "35%" }}></div>
+    <div className="temple-ember" style={{ left: "78%", top: "25%" }}></div>
+    <div className="temple-ember" style={{ left: "15%", top: "60%" }}></div>
+    <div className="temple-ember" style={{ left: "50%", top: "70%" }}></div>
+    <div className="temple-ember" style={{ left: "85%", top: "55%" }}></div>
 
-      {/* TOP NAV */}
-      <div className="w-full flex justify-between items-center px-6 py-4 bg-white shadow-sm fixed top-0 left-0 z-50">
-        <Link href="/plaza" className="text-purple-600 font-semibold">
-          Mmanwu Plaza
-        </Link>
+    {/* TOP NAV — DARK THEME */}
+    <div className="w-full flex justify-between items-center px-6 py-4 
+                    bg-black/40 backdrop-blur-md border-b border-white/10
+                    fixed top-0 left-0 z-50">
+      <Link href="/plaza" className="text-purple-300 font-semibold">
+        Mmanwu Plaza
+      </Link>
 
-        <Link href="/profile/me" className="text-purple-600 font-semibold">
-          My Profile
-        </Link>
-      </div>
+      <Link href="/profile/me" className="text-purple-300 font-semibold">
+        My Profile
+      </Link>
+    </div>
 
-      <div className="w-full flex flex-col items-center mt-20 px-4">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          Mmanwu Plaza
-        </h1>
+    <div className="w-full flex flex-col items-center mt-20 px-4">
+      <h1 className="text-2xl font-bold text-white mb-6 text-center">
+        Mmanwu Plaza
+      </h1>
 
         {loading && <p className="text-gray-200">Loading posts…</p>}
         {error && <p className="text-red-400">{error}</p>}
