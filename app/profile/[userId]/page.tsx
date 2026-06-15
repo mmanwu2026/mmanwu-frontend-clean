@@ -107,25 +107,32 @@ export default function UserProfilePage({ params }: { params: { userId: string }
           <p className="text-zinc-500 text-center">No posts yet.</p>
         )}
 
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl"
-          >
-            <p className="text-sm mb-3">{post.content}</p>
+        {posts.length === 0 && (
+  <p className="text-zinc-500 text-center">No posts yet.</p>
+)}
 
-            <ReactionBar
-              postId={post.id}
-              initialReactions={{
-                mask1: post.mask1,
-                mask2: post.mask2,
-                mask3: post.mask3,
-                mask4: post.mask4,
-                mask5: post.mask5,
-              }}
-            />
-          </div>
-        ))}
+{posts.map((post) => (
+  <div
+    key={post.id}
+    className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl"
+  >
+    <p className="text-sm mb-3">{post.content}</p>
+
+    <ReactionBar
+      postId={post.id}
+      creatorId={post.creatorId}
+      reactions={{
+        mask1: post.mask1 ?? 0,
+        mask2: post.mask2 ?? 0,
+        mask3: post.mask3 ?? 0,
+        mask4: post.mask4 ?? 0,
+        mask5: post.mask5 ?? 0,
+      }}
+      spiritScore={post.spiritScore ?? 0}
+      positivityRatio={post.positivityRatio ?? 0.5}
+    />
+  </div>
+))}
       </div>
     </div>
   );
