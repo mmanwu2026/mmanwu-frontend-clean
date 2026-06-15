@@ -500,4 +500,13 @@
 /* 17. END OF D4 THEME — FINAL OVERRIDES                        */
 /* ------------------------------------------------------------ */
 
+html, body {
+  background-color: #000 !important;
+  color: #e5e7eb !important; /* gray-200 */
+}
+
+* {
+  color-scheme: dark;
+}
+
 /* (Reserved for future Plaza upgrades) */
