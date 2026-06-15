@@ -225,7 +225,7 @@ export default function PlazaPage() {
   }, []);
 
   return (
-    <div className="plaza-background min-h-[160vh] w-full pt-28 pb-32">
+   <div className="plaza-background min-h-[180vh] w-full pt-28 pb-32 relative z-0">
       {/* === D4 TEMPLE EMBERS === */}
       <div className="temple-ember" style={{ left: "12%", top: "20%" }}></div>
       <div className="temple-ember" style={{ left: "28%", top: "40%" }}></div>
@@ -364,7 +364,6 @@ export default function PlazaPage() {
                     transition-all
                     duration-500
                     overflow-visible
-                    isolate-layout
                     min-h-[420px]
                     w-[380px]
                     mx-auto
