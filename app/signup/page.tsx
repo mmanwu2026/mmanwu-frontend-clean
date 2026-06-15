@@ -1,0 +1,108 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/supabaseClient";
+
+export default function SignupPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSignup(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    // 1. Create Supabase Auth user
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (signUpError || !data.user) {
+      setError(signUpError?.message || "Signup failed");
+      setLoading(false);
+      return;
+    }
+
+    const userId = data.user.id;
+
+    // 2. Auto-generate username
+    const randomNumber = Math.floor(1000 + Math.random() * 90000);
+    const username = `user_${randomNumber}`;
+
+    // 3. Create profile row in Supabase
+    const { error: profileError } = await supabase.from("users").insert({
+      id: userId,
+      username,
+      avatar_url: null,
+      bio: null,
+      spirit_score: 0,
+      mask_tier: 0,
+      last_active: new Date().toISOString(),
+    });
+
+    if (profileError) {
+      setError("Profile creation failed");
+      setLoading(false);
+      return;
+    }
+
+    // 4. Redirect to login
+    router.push("/login");
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+      <form
+        onSubmit={handleSignup}
+        className="w-full max-w-md space-y-4 bg-zinc-900 p-6 rounded-xl border border-zinc-700"
+      >
+        <h1 className="text-2xl font-semibold">Sign up</h1>
+
+        {error && <p className="text-red-400 text-sm">{error}</p>}
+
+        <div>
+          <label className="block text-sm mb-1">Email</label>
+          <input
+            type="email"
+            className="w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm mb-1">Password</label>
+          <input
+            type="password"
+            className="w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full rounded-md bg-emerald-500 hover:bg-emerald-400 text-black font-semibold py-2 text-sm disabled:opacity-50"
+        >
+          {loading ? "Creating account..." : "Sign up"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => router.push("/login")}
+          className="w-full rounded-md bg-zinc-800 hover:bg-zinc-700 text-sm py-2 mt-2"
+        >
+          Already have an account? Log in
+        </button>
+      </form>
+    </div>
+  );
+}
