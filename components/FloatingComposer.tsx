@@ -1,20 +1,19 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import GatekeeperModal from "./GatekeeperModal";
+import { supabase } from "@/supabaseClient";
 import { useUser } from "@/context/UserContext";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
-
-export default function FloatingComposer({ onPost }: { onPost: (post?: any) => void }) {
+export default function FloatingComposer({
+  onPost,
+}: {
+  onPost: (post: any) => void;
+}) {
   const { user, loading } = useUser();
 
   const [content, setContent] = useState("");
   const [expanded, setExpanded] = useState(false);
   const [hidden, setHidden] = useState(false);
-
-  const [gatekeeperOptions, setGatekeeperOptions] = useState<any[]>([]);
-  const [showGatekeeperModal, setShowGatekeeperModal] = useState(false);
 
   const lastScroll = useRef(0);
 
@@ -33,57 +32,25 @@ export default function FloatingComposer({ onPost }: { onPost: (post?: any) => v
     if (!content.trim()) return;
     if (loading || !user) return;
 
-    const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    const { data, error } = await supabase
+      .from("posts")
+      .insert({
         content,
         creator_id: user.id,
-      }),
-    });
+        mask: 0, // default mask
+      })
+      .select()
+      .single();
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.error || "Error creating post");
+    if (error) {
+      alert(error.message || "Error creating post");
       return;
     }
 
-    if (data.options) {
-      setGatekeeperOptions(data.options);
-      setShowGatekeeperModal(true);
-      return;
-    }
-
-    await publishFinalVersion(content);
-  }
-
-  async function publishFinalVersion(finalText: string) {
-    if (loading || !user) return;
-
-    const res = await fetch(`${BACKEND_URL.replace(/\/$/, "")}/plaza/publish`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: finalText,
-        mask: 0,              // ⭐ your backend expects "mask", not mask_tier
-        creatorId: user.id,   // ⭐ your backend expects "creatorId", not creator_id
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.error || "Error publishing post");
-      return;
-    }
-
-    // data IS the new post
     setContent("");
     setExpanded(false);
-    setShowGatekeeperModal(false);
 
-    onPost(data);
+    if (data) onPost(data);
   }
 
   return (
@@ -150,14 +117,6 @@ export default function FloatingComposer({ onPost }: { onPost: (post?: any) => v
           </div>
         )}
       </div>
-
-      {showGatekeeperModal && (
-        <GatekeeperModal
-          options={gatekeeperOptions}
-          onSelect={(text) => publishFinalVersion(text)}
-          onClose={() => setShowGatekeeperModal(false)}
-        />
-      )}
     </div>
   );
 }
