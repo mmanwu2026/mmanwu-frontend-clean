@@ -8,7 +8,7 @@ import ReactionBar from "@/components/ReactionBar";
 import FloatingComposer from "@/components/FloatingComposer";
 import { useUser } from "@/context/UserContext";
 
-console.log("force aura rebuild 3");
+console.log("force aura rebuild 4");
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -186,6 +186,17 @@ export default function PlazaPage() {
   return (
     <div className="plaza-background min-h-[180vh] w-full pt-28 pb-32 relative z-0">
 
+      {/* HEADER — FIXED */}
+      <div className="w-full flex justify-between items-center px-6 mb-10">
+        <Link href="/plaza" className="text-xl font-bold text-purple-300 hover:text-purple-400 transition">
+          Mmanwu Plaza
+        </Link>
+
+        <Link href="/profile/me" className="text-lg font-semibold text-purple-200 hover:text-purple-300 transition">
+          My Profile
+        </Link>
+      </div>
+
       {/* TEMPLE EMBERS */}
       <div className="temple-ember" style={{ left: "12%", top: "20%" }}></div>
       <div className="temple-ember" style={{ left: "28%", top: "40%" }}></div>
@@ -196,10 +207,7 @@ export default function PlazaPage() {
       <div className="temple-ember" style={{ left: "50%", top: "70%" }}></div>
       <div className="temple-ember" style={{ left: "85%", top: "55%" }}></div>
 
-      <div className="w-full flex flex-col items-center mt-20 px-4">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          Mmanwu Plaza
-        </h1>
+      <div className="w-full flex flex-col items-center mt-10 px-4">
 
         {loading && <p className="text-gray-300">Loading posts…</p>}
         {error && <p className="text-red-400">{error}</p>}
@@ -307,16 +315,15 @@ export default function PlazaPage() {
                     relative
                     p-8
                     rounded-2xl
-                    dark-temple-panel
                     transition-all
                     duration-500
                     overflow-visible
                     min-h-[420px]
                     w-[380px]
                     mx-auto
-                    plaza-card-base
                     flex flex-col items-center
 
+                    plaza-card-base
                     aura-mask-${post.autoMask}
                     aura-intensity-${intensity}
 
