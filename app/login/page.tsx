@@ -27,8 +27,8 @@ export default function LoginPage() {
       return;
     }
 
-    // Redirect to /profile/me
-    router.push("/profile/me");
+    // Redirect to Plaza (new home)
+    router.push("/plaza");
   }
 
   return (
