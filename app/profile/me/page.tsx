@@ -1,33 +1,33 @@
-"use client";
+// app/profile/me/page.tsx
+import { redirect } from "next/navigation";
+import { createServerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/supabaseClient";
+export default async function ProfileMeRedirect() {
+  // Next.js 14: cookies() is async
+  const cookieStore = await cookies();
 
-export default function ProfileMeRedirect() {
-  const router = useRouter();
-
-  useEffect(() => {
-    async function checkSession() {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session?.user) {
-        router.replace("/login");
-        return;
-      }
-
-      const userId = session.user.id;
-      router.replace(`/profile/${userId}`);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
     }
-
-    checkSession();
-  }, [router]);
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <p className="text-zinc-400 text-sm">Loading your profile...</p>
-    </div>
   );
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // Not logged in → go to login
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  // Logged in → redirect to real profile
+  redirect(`/profile/${session.user.id}`);
 }
