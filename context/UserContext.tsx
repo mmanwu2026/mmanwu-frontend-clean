@@ -13,47 +13,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    async function hydrate() {
-      // 1️⃣ Wait for Supabase to hydrate the session
-      const { data } = await supabase.auth.getSession();
-      const sessionUser = data.session?.user || null;
+    // 1️⃣ First: wait for Supabase to hydrate the session
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      setUser(data.session?.user || null);
+      setLoading(false);
+    });
 
-      if (mounted) setUser(sessionUser);
-
-      // 2️⃣ If user exists, ensure profile exists
-      if (sessionUser) {
-        const { data: profile } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", sessionUser.id)
-          .maybeSingle();
-
-        if (!profile) {
-          const randomNumber = Math.floor(1000 + Math.random() * 90000);
-          const username = `maskling_${randomNumber}`;
-
-          await supabase.from("users").insert({
-            id: sessionUser.id,
-            name: sessionUser.user_metadata?.name || "",
-            username,
-            display_name_enabled: false,
-          });
-        }
-      }
-
-      if (mounted) setLoading(false);
-    }
-
-    hydrate();
-
-    // 3️⃣ Listen for auth changes
+    // 2️⃣ Listen for auth changes (this is the REAL source of truth)
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        const sessionUser = session?.user || null;
+        if (!mounted) return;
 
-        if (mounted) setUser(sessionUser);
+        const sessionUser = session?.user || null;
+        setUser(sessionUser);
 
         if (sessionUser) {
+          // Ensure profile exists
           const { data: profile } = await supabase
             .from("users")
             .select("*")
