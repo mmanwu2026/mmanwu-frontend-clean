@@ -1,4 +1,3 @@
-// plaza-css-bust-12
 "use client";
 
 import Link from "next/link";
@@ -28,7 +27,7 @@ export default function AuthNav() {
         </div>
       ) : (
         <div className="flex gap-4">
-          <Link href={`/profile/${user.id}`} className="hover:underline">
+          <Link href="/profile/me" className="hover:underline">
             My Profile
           </Link>
           <button onClick={handleLogout} className="hover:underline">
