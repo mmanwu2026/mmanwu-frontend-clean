@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { createSupabaseBrowserClient } from "@/lib/supabase-browser";   // ⭐ FIXED
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useUser } from "@/context/UserContext";
 import GatekeeperModal from "@/components/GatekeeperModal";
 import SpiritToast from "@/components/SpiritToast";
@@ -11,7 +11,7 @@ export default function FloatingComposer({
 }: {
   onPost: (post: any) => void;
 }) {
-  const supabase = createSupabaseBrowserClient();   // ⭐ FIXED: create client here
+  const supabase = createSupabaseBrowserClient();
   const { user, loading } = useUser();
 
   const [content, setContent] = useState("");
@@ -22,7 +22,6 @@ export default function FloatingComposer({
   const [showGatekeeper, setShowGatekeeper] = useState(false);
 
   const lastScroll = useRef(0);
-
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Hide composer on scroll
@@ -37,121 +36,28 @@ export default function FloatingComposer({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ⭐ UPGRADED GATEKEEPER LOGIC
+  // ⭐ NEW SERVER-POWERED GATEKEEPER LOGIC
   async function runGatekeeper(rawText: string) {
-    const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
-    if (!apiKey) {
-      console.error("Missing NEXT_PUBLIC_OPENAI_API_KEY");
+    try {
+      const res = await fetch("/api/gatekeeper", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: rawText }),
+      });
+
+      if (!res.ok) {
+        console.error("Gatekeeper API error:", await res.text());
+        return null;
+      }
+
+      return await res.json();
+    } catch (err) {
+      console.error("Gatekeeper fetch failed:", err);
       return null;
     }
-
-    // 1️⃣ Emotion + toxicity + bullying analysis
-    const analysisRes = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `
-You are the Mmanwu Emotional Classifier.
-
-Analyze the user's message and return a JSON object with:
-- emotion: one of ["joy","excitement","gratitude","pride","relief","celebration","anger","sadness","fear","anxiety","neutral"]
-- intensity: number 0–1
-- toxicity: number 0–1
-- bullying: number 0–1
-- clarity: number 0–1
-Return ONLY valid JSON.
-            `,
-          },
-          { role: "user", content: rawText },
-        ],
-        temperature: 0,
-      }),
-    });
-
-    const analysisText = await analysisRes.json();
-    let analysis;
-
-    try {
-      analysis = JSON.parse(
-        analysisText?.choices?.[0]?.message?.content || "{}"
-      );
-    } catch {
-      analysis = { emotion: "neutral", intensity: 0, toxicity: 0, bullying: 0, clarity: 1 };
-    }
-
-    const { emotion, intensity, toxicity, bullying, clarity } = analysis;
-
-    // 2️⃣ Auto-approve rule for positive posts
-    const positiveEmotions = ["joy", "excitement", "gratitude", "pride", "relief", "celebration"];
-
-    if (
-      positiveEmotions.includes(emotion) &&
-      toxicity < 0.1 &&
-      bullying < 0.1 &&
-      clarity >= 0.4
-    ) {
-      return { autoApprove: true };
-    }
-
-    // 3️⃣ Generate rewrites + explanations
-    const rewriteRes = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `
-You are the Mmanwu Gatekeeper.
-
-Rewrite the user's message into 3 versions:
-1. Calm
-2. Direct
-3. Elevated (if the message is positive, allow refined celebration with correct exclamation marks)
-
-For each rewrite, also provide:
-- explanation: why this rewrite is safer, clearer, or more expressive.
-
-Return the result as JSON:
-[
-  { "label": "Calm", "text": "...", "explanation": "..." },
-  { "label": "Direct", "text": "...", "explanation": "..." },
-  { "label": "Elevated", "text": "...", "explanation": "..." }
-]
-            `,
-          },
-          { role: "user", content: rawText },
-        ],
-        temperature: 0.7,
-      }),
-    });
-
-    const rewriteText = await rewriteRes.json();
-    let rewrites;
-
-    try {
-      rewrites = JSON.parse(
-        rewriteText?.choices?.[0]?.message?.content || "[]"
-      );
-    } catch {
-      rewrites = [];
-    }
-
-    return { autoApprove: false, rewrites };
   }
 
-  // ⭐ Step 2 — Insert final text into Supabase
+  // ⭐ Insert final text into Supabase
   async function publishToSupabase(finalText: string) {
     if (!user) return;
 
@@ -173,7 +79,7 @@ Return the result as JSON:
     if (data) onPost(data);
   }
 
-  // ⭐ Step 3 — Main submit handler
+  // ⭐ Main submit handler
   async function handleSubmit() {
     if (!content.trim()) return;
     if (loading || !user) return;
@@ -196,7 +102,7 @@ Return the result as JSON:
     }
   }
 
-  // ⭐ Step 4 — User selects a rewrite
+  // ⭐ User selects a rewrite
   function handleGatekeeperSelect(finalText: string) {
     setShowGatekeeper(false);
     publishToSupabase(finalText);
