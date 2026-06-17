@@ -16,8 +16,8 @@ export default function GatekeeperModal({
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-black/80 border border-white/10 rounded-2xl p-6 max-w-lg w-full space-y-5 shadow-xl">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div className="bg-[#0d0d0f] border border-white/20 rounded-2xl p-6 max-w-lg w-full space-y-5 shadow-2xl">
         
         <h2 className="text-xl font-semibold text-white text-center">
           Mmanwu Gatekeeper
@@ -36,8 +36,8 @@ export default function GatekeeperModal({
                 p-4 rounded-xl border cursor-pointer transition-all
                 ${
                   selected === opt.text
-                    ? "border-purple-500 bg-purple-500/10"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                    ? "border-purple-500 bg-purple-500/20"
+                    : "border-white/20 bg-white/5 hover:bg-white/10"
                 }
               `}
             >
@@ -45,12 +45,12 @@ export default function GatekeeperModal({
                 {opt.label}
               </div>
 
-              <div className="text-gray-200 whitespace-pre-line">
+              <div className="text-gray-200 whitespace-pre-line leading-relaxed">
                 {opt.text}
               </div>
 
               {opt.explanation && (
-                <div className="text-gray-400 text-xs mt-2">
+                <div className="text-gray-400 text-xs mt-2 leading-snug">
                   {opt.explanation}
                 </div>
               )}
