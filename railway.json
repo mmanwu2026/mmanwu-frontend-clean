@@ -1,5 +1,9 @@
 {
+  "build": {
+    "builder": "NIXPACKS"
+  },
   "deploy": {
-    "path": "gatekeeper-worker"
+    "path": "gatekeeper-worker",
+    "startCommand": "npm start"
   }
 }
