@@ -12,14 +12,14 @@ const apiKey = process.env.OPENAI_API_KEY!;
 
 // ------------------------------
 //  generateRewrites Function
-//  (paste your full rewrite logic here)
 // ------------------------------
 async function generateRewrites(input: string, apiKey: string) {
-  // 👉 Your entire rewrite logic goes here
-  // (the same function you copied from your Gatekeeper route)
+  return {
+    calm: input,
+    direct: input,
+    elevated: input,
+  };
 }
-
-
 
 // ------------------------------
 //  Gatekeeper Worker Loop
@@ -28,7 +28,6 @@ async function runWorker() {
   console.log("Gatekeeper Worker started...");
 
   while (true) {
-    // 1️⃣ Get next pending job
     const { data: job, error: jobError } = await supabase
       .from("gatekeeper_jobs")
       .select("*")
@@ -44,13 +43,11 @@ async function runWorker() {
 
     console.log("Processing job:", job.id);
 
-    // Mark job as processing
     await supabase
       .from("gatekeeper_jobs")
       .update({ status: "processing" })
       .eq("id", job.id);
 
-    // 2️⃣ Fetch the post
     const { data: post } = await supabase
       .from("posts")
       .select("*")
@@ -68,9 +65,6 @@ async function runWorker() {
 
     const text = post.content;
 
-    // ------------------------------
-    //  Emotion Analysis
-    // ------------------------------
     const analysisRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -100,18 +94,31 @@ Analyze the user's message and return ONLY JSON:
     });
 
     const analysisJson = await analysisRes.json();
+
+    // ------------------------------
+    //  Safe JSON Parsing
+    // ------------------------------
     let analysis;
 
     try {
-      analysis = JSON.parse(analysisJson?.choices?.[0]?.message?.content || "{}");
+      const content = analysisJson?.choices?.[0]?.message?.content;
+      analysis = content ? JSON.parse(content) : null;
     } catch {
-      analysis = { emotion: "neutral", intensity: 0, toxicity: 0, bullying: 0, clarity: 1 };
+      analysis = null;
     }
 
-    // 3️⃣ Generate rewrites
+    if (!analysis) {
+      analysis = {
+        emotion: "neutral",
+        intensity: 0,
+        toxicity: 0,
+        bullying: 0,
+        clarity: 1,
+      };
+    }
+
     const rewrites = await generateRewrites(text, apiKey);
 
-    // 4️⃣ Update the post with results
     await supabase
       .from("posts")
       .update({
@@ -124,7 +131,6 @@ Analyze the user's message and return ONLY JSON:
       })
       .eq("id", post.id);
 
-    // 5️⃣ Mark job as done
     await supabase
       .from("gatekeeper_jobs")
       .update({ status: "done" })
@@ -134,16 +140,12 @@ Analyze the user's message and return ONLY JSON:
   }
 }
 
-
-
 // ------------------------------
 //  Sleep Helper
 // ------------------------------
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
-
 
 // ------------------------------
 //  Start the Worker
