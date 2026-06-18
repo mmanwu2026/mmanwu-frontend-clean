@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 // ------------------------------
 //  Supabase + API Key Setup
@@ -78,9 +79,6 @@ Analyze the user's message and return ONLY JSON:
             }),
         });
         const analysisJson = await analysisRes.json();
-        // ------------------------------
-        //  Safe JSON Parsing
-        // ------------------------------
         let analysis;
         try {
             const content = analysisJson?.choices?.[0]?.message?.content;

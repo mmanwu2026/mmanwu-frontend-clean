@@ -96,9 +96,6 @@ Analyze the user's message and return ONLY JSON:
 
     const analysisJson = await analysisRes.json();
 
-    // ------------------------------
-    //  Safe JSON Parsing
-    // ------------------------------
     let analysis;
 
     try {
